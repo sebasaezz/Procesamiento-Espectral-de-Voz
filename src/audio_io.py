@@ -48,7 +48,7 @@ def load_audio():
     if x.ndim == 2:
         x = x.mean(axis=1)
 
-
+    #normalizar en [-1, 1]
     amplitud_max = np.max(np.abs(x))
     if amplitud_max != 0:
         x = x/amplitud_max
