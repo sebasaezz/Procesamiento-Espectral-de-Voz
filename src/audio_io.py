@@ -3,15 +3,26 @@ import numpy as np
 import os
 
 def load_audio():
-    files = os.listdir(os.path.join("audios"))
-    for i, f in enumerate(files):
-        if not f.endswith(".wav"):
-            files.pop(i)
+
+    audio_dir = "audios"
+
+    if not os.path.isdir(audio_dir):
+        print("No existe la carpeta 'audios'.")
+        return None
     
+    files = [
+        f for f in os.listdir(audio_dir)
+        if f.lower().endswith(".wav")
+    ]
+    
+    if len(files) == 0:
+        print("No se encontraron archivos .wav.")
+        return None
+
     #Primero, le pedimos al usuario que escoja un archivo
     file = ""
     if files == []:
-        return False
+        return None
     else:
         print("Se encontraron los siguientes archivos .wav")
         for i, f in enumerate(files):
@@ -23,7 +34,7 @@ def load_audio():
                 print("Escoja un número")
                 continue
             if eleccion in range(len(files)):
-                file = os.path.join("audios", files[eleccion])
+                file = os.path.join(audio_dir, files[eleccion])
                 break
             else:
                 print("Elección fuera de rango, intente de nuevo")
@@ -37,8 +48,10 @@ def load_audio():
     if x.ndim == 2:
         x = x.mean(axis=1)
 
-    if np.max(np.abs(x)) != 0:
-        x = x/np.max(np.abs(x))
+
+    amplitud_max = np.max(np.abs(x))
+    if amplitud_max != 0:
+        x = x/amplitud_max
 
     return u_s, x
 
