@@ -20,9 +20,6 @@ def load_audio():
         return None
 
     #Primero, le pedimos al usuario que escoja un archivo
-    file = ""
-    if files == []:
-        return None
     else:
         print("Se encontraron los siguientes archivos .wav")
         for i, f in enumerate(files):
@@ -34,12 +31,12 @@ def load_audio():
                 print("Escoja un número")
                 continue
             if eleccion in range(len(files)):
-                file = os.path.join(audio_dir, files[eleccion])
+                file_path = os.path.join(audio_dir, files[eleccion])
                 break
             else:
                 print("Elección fuera de rango, intente de nuevo")
     
-    u_s, x = wavfile.read(file)
+    u_s, x = wavfile.read(file_path)
 
     #asegurarse de estar en float
     x = x.astype(np.float32)
@@ -53,7 +50,7 @@ def load_audio():
     if amplitud_max != 0:
         x = x/amplitud_max
 
-    return u_s, x
+    return u_s, x, file_path
 
 
         
