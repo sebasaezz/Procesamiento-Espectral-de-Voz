@@ -1,8 +1,14 @@
 from audio_io import load_audio
-from dft import dividir_en_bloques, escojer_ventana
+from dft import dividir_en_bloques, aplicar_ventana, calcular_dft
 
 u_s, x, file_path =  load_audio()
 
-b = dividir_en_bloques(x, 100, 50)
+N = 100
+hop = 50
 
-escojer_ventana()
+bloques = dividir_en_bloques(x, N, hop)
+
+aplicar_ventana(bloques, N)
+dft = calcular_dft(bloques)
+
+print(dft)

@@ -16,6 +16,10 @@ def dividir_en_bloques(x, N, hop):
     return np.array(bloques)
 
 def aplicar_ventana(bloques, N):
+
+    if bloques is None:
+        return None, None
+
     ventana = escojer_ventana(N)
 
     return bloques*ventana, ventana
@@ -53,3 +57,12 @@ def escojer_ventana(N):
         return np.hamming(N)
     elif ventana == "Blackman":
         return np.blackman(N)
+    
+def calcular_dft(bloques):
+    if bloques is None:
+        return None
+
+    #Calculamos usando np
+    dft = np.fft.fft(bloques, axis=1)
+
+    return dft
