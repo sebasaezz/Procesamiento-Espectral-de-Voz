@@ -3,12 +3,10 @@ from dft import dividir_en_bloques, aplicar_ventana, calcular_dft
 
 u_s, x, file_path =  load_audio()
 
-N = 100
-hop = 50
+N = 2000
+hop = 200
 
 bloques = dividir_en_bloques(x, N, hop)
 
-aplicar_ventana(bloques, N)
-dft = calcular_dft(bloques)
-
-print(dft)
+bloques_ventana = aplicar_ventana(bloques, N)
+calcular_dft(bloques_ventana)
