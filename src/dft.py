@@ -28,14 +28,18 @@ def escojer_ventana(N):
     ventana = ""
 
     opciones = ["Sin ventana", "Gauss", "Triangulo", "Hanning", "Hamming", "Blackman"]
-
+    print("\n\n\n\n\n\n")
     print("Escoja una ventana a usar:")
     for i, opcion in enumerate(opciones):
         print("   ", f"[{i+1}]", opcion)
-
+    print("O presione Enter para ventana por defecto: Hanning")
     while True:
+        numero_elegido = input("Escoja un número: ")
+        if numero_elegido == "":
+            ventana = "Hanning"
+            break
         try:
-            numero_elegido = int(input("Escoja un número: "))
+            numero_elegido = int(numero_elegido)
         except ValueError:
             print("Asegúrese de escribir un número")
             continue

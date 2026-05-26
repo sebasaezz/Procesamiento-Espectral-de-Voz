@@ -21,6 +21,7 @@ def load_audio():
 
     #Primero, le pedimos al usuario que escoja un archivo
     else:
+        print("\n\n\n\n\n\n")
         print("Se encontraron los siguientes archivos .wav")
         for i, f in enumerate(files):
             print("   ", f"[{i}]" ,f)
@@ -52,5 +53,45 @@ def load_audio():
 
     return u_s, x, file_path
 
+def elegir_N_hop():
 
-        
+    N_def, hop_def = 2048, 1024
+
+    print("\n\n\n\n\n\n")
+    print(f"Escoja un valor para N, o presione Enter para valor por defecto: {N_def}")
+    while True:
+        numero_elegido = input("Escoja un número: ")
+        if numero_elegido == "":
+            N = N_def
+            break
+        try:
+            numero_elegido = int(numero_elegido)
+        except ValueError:
+            print("Asegúrese de escribir un número")
+            continue
+        if numero_elegido > 0:
+            N = numero_elegido
+            break
+        else:
+            print("Elección fuera de rango, intente de nuevo")
+
+    print("\n\n\n\n\n\n")
+    print(f"Escoja un valor para H (hop), o presione Enter para valor por defecto: {hop_def}")
+    while True:
+        numero_elegido = input("Escoja un número: ")
+        if numero_elegido == "":
+            hop = hop_def
+            break
+        try:
+            numero_elegido = int(numero_elegido)
+        except ValueError:
+            print("Asegúrese de escribir un número")
+            continue
+        if numero_elegido > 0:
+            hop = numero_elegido
+            break
+        else:
+            print("Elección fuera de rango, intente de nuevo")
+
+    return N, hop
+    
