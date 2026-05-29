@@ -15,9 +15,9 @@ X = calcular_dft(bloques_ventana)
 
 plot_espectrograma(X, M, hop, u_s)
 
-x_ola = ola(X, M, hop, A_max)
+x_ola = ola(X, M, hop)
 
-reconstruir_audio(x_ola, u_s, M, ventana, nombre_audio)
+reconstruir_audio(x_ola, u_s, M, ventana, nombre_audio, A_max)
 
 plot_audio_y_reconstruccion(audio=x, reconstruccion=x_ola, u_s=u_s)
 

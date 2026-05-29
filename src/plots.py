@@ -34,19 +34,32 @@ def plot_audio_y_reconstruccion(audio, reconstruccion, u_s):
 
     plt.figure(figsize=(12, 6))
 
-    plt.subplot(2, 1, 1)
+    plt.subplot(3, 1, 1)
     plt.plot(t, audio_plot)
     plt.title("Audio original")
     plt.xlabel("Tiempo [s]")
     plt.ylabel("Amplitud")
     plt.grid(True)
 
-    plt.subplot(2, 1, 2)
+    plt.subplot(3, 1, 2)
     plt.plot(t, reconstruccion_plot)
     plt.title("Audio reconstruido")
     plt.xlabel("Tiempo [s]")
     plt.ylabel("Amplitud")
     plt.grid(True)
+
+    diferencia =reconstruccion_plot-audio_plot
+
+    rmse_relativo = np.sqrt(np.mean(diferencia**2))/np.sqrt(np.mean(audio**2))
+
+    plt.subplot(3, 1, 3)
+    plt.plot(t, diferencia)
+    plt.title(f"Diferencia Audio - Reconstrucción\nRMSE relativo = {rmse_relativo}")
+    plt.xlabel("Tiempo [s]")
+    plt.ylabel("Amplitud")
+    plt.grid(True)
+
+
 
     plt.tight_layout()
     plt.show(block=False)

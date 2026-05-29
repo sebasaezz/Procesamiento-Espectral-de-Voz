@@ -54,6 +54,8 @@ def load_audio():
     if amplitud_max != 0:
         x = x/amplitud_max
 
+    print("Audio cargado, frecuencia de muestreo: ",u_s,"Hz")
+
     return u_s, x, file_path, amplitud_max, nombre_audio[:-4]
 
 def elegir_parametros():
@@ -62,8 +64,11 @@ def elegir_parametros():
 
     print("\n\n\n\n\n\n")
     print(f"Escoja un valor para M, el largo de los bloques, o presione Enter para valor por defecto: {M_def}")
+    print("Se recomiendan valores en forma 2^p - 1. Algunos valores recomendados son:")
+    for i in range(9, 15):
+        print(f"    -{2**i-1}")
     while True:
-        numero_elegido = input("Escoja un número: ")
+        numero_elegido = input("Escriba el valor de M o presiones enter: ")
         if numero_elegido == "":
             M = M_def
             break
