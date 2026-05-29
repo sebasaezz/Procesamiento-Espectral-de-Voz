@@ -1,72 +1,36 @@
 import numpy as np
-from scipy.signal.windows import gaussian
+from audio_io import escojer_ventana
 
-def dividir_en_bloques(x, N, hop):
-    if len(x) < N:
+def dividir_en_bloques(x, M, hop):
+    if len(x) < M:
         print("La señal es más corta que el tamaño de bloque.")
         return None
 
     bloques = []
-    n_bloques = (len(x)-N)//hop + 1
+    n_bloques = (len(x)-M)//hop + 1
 
     for m in range(n_bloques):
-        bloque = x[m*hop : m*hop + N]
+        bloque = x[m*hop : m*hop + M]
         bloques.append(bloque)
     
     return np.array(bloques)
 
-def aplicar_ventana(bloques, N):
+def aplicar_ventana(bloques, expresion_ventana):
 
     if bloques is None:
-        return None, None
+        return None
 
-    ventana = escojer_ventana(N)
-
-    return bloques*ventana, ventana
-
-def escojer_ventana(N):
-    ventana = ""
-
-    opciones = ["Sin ventana", "Gauss", "Triangulo", "Hanning", "Hamming", "Blackman"]
-    print("\n\n\n\n\n\n")
-    print("Escoja una ventana a usar:")
-    for i, opcion in enumerate(opciones):
-        print("   ", f"[{i+1}]", opcion)
-    print("O presione Enter para ventana por defecto: Hanning")
-    while True:
-        numero_elegido = input("Escoja un número: ")
-        if numero_elegido == "":
-            ventana = "Hanning"
-            break
-        try:
-            numero_elegido = int(numero_elegido)
-        except ValueError:
-            print("Asegúrese de escribir un número")
-            continue
-        if numero_elegido in range(1,7):
-            ventana = opciones[numero_elegido-1]
-            break
-        else:
-            print("Elección fuera de rango, intente de nuevo")
-
-    if ventana == "Sin ventana":
-        return 1
-    elif ventana == "Gauss":
-        return gaussian(N, std=N/6)
-    elif ventana == "Triangulo":
-        return np.bartlett(N)
-    elif ventana == "Hanning":
-        return np.hanning(N)
-    elif ventana == "Hamming":
-        return np.hamming(N)
-    elif ventana == "Blackman":
-        return np.blackman(N)
+    return bloques*expresion_ventana
     
 def calcular_dft(bloques):
     if bloques is None:
         return None
 
+    # Como cada bloque tiene duracion M-1 para que sean pares, se hacee un pequeño zero padding
+    # se agrega un cero al final de cada bloque
+    bloques_padded = np.pad(bloques, ((0, 0), (0, 1)), mode="constant")
+
     #Calculamos usando np
-    dft = np.fft.fft(bloques, axis=1)
+    dft = np.fft.fft(bloques_padded, axis=1)
 
     return dft

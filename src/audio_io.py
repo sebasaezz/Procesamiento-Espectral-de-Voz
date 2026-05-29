@@ -1,5 +1,7 @@
 from scipy.io import wavfile
 import numpy as np
+from scipy.signal.windows import gaussian
+
 import os
 
 def load_audio():
@@ -14,7 +16,7 @@ def load_audio():
         f for f in os.listdir(audio_dir)
         if f.lower().endswith(".wav")
     ]
-    
+    nombre_audio = ""
     if len(files) == 0:
         print("No se encontraron archivos .wav.")
         return None
@@ -32,7 +34,8 @@ def load_audio():
                 print("Escoja un número")
                 continue
             if eleccion in range(len(files)):
-                file_path = os.path.join(audio_dir, files[eleccion])
+                nombre_audio = files[eleccion]
+                file_path = os.path.join(audio_dir, nombre_audio)
                 break
             else:
                 print("Elección fuera de rango, intente de nuevo")
@@ -51,18 +54,18 @@ def load_audio():
     if amplitud_max != 0:
         x = x/amplitud_max
 
-    return u_s, x, file_path
+    return u_s, x, file_path, amplitud_max, nombre_audio[:-4]
 
-def elegir_N_hop():
+def elegir_parametros():
 
-    N_def, hop_def = 2048, 1024
+    M_def= 2048 - 1
 
     print("\n\n\n\n\n\n")
-    print(f"Escoja un valor para N, o presione Enter para valor por defecto: {N_def}")
+    print(f"Escoja un valor para M, el largo de los bloques, o presione Enter para valor por defecto: {M_def}")
     while True:
         numero_elegido = input("Escoja un número: ")
         if numero_elegido == "":
-            N = N_def
+            M = M_def
             break
         try:
             numero_elegido = int(numero_elegido)
@@ -70,28 +73,51 @@ def elegir_N_hop():
             print("Asegúrese de escribir un número")
             continue
         if numero_elegido > 0:
-            N = numero_elegido
+            M = numero_elegido
             break
         else:
             print("Elección fuera de rango, intente de nuevo")
-
-    print("\n\n\n\n\n\n")
-    print(f"Escoja un valor para H (hop), o presione Enter para valor por defecto: {hop_def}")
-    while True:
-        numero_elegido = input("Escoja un número: ")
-        if numero_elegido == "":
-            hop = hop_def
-            break
-        try:
-            numero_elegido = int(numero_elegido)
-        except ValueError:
-            print("Asegúrese de escribir un número")
-            continue
-        if numero_elegido > 0:
-            hop = numero_elegido
-            break
-        else:
-            print("Elección fuera de rango, intente de nuevo")
-
-    return N, hop
     
+    resultado_ventana = escojer_ventana(M)
+
+    print("Usando hop size:", resultado_ventana[0])
+
+    return (M, *resultado_ventana)
+    
+def escojer_ventana(M):
+    ventana = ""
+
+    opciones = ["Sin ventana", "Gauss", "Triangulo", "Hanning", "Hamming", "Blackman"]
+    print("\n\n\n\n\n\n")
+    print("Escoja una ventana a usar:")
+    for i, opcion in enumerate(opciones):
+        print("   ", f"[{i+1}]", opcion)
+    print("O presione Enter para ventana por defecto: Hanning")
+    while True:
+        numero_elegido = input("Escoja un número: ")
+        if numero_elegido == "":
+            ventana = "Hanning"
+            break
+        try:
+            numero_elegido = int(numero_elegido)
+        except ValueError:
+            print("Asegúrese de escribir un número")
+            continue
+        if numero_elegido in range(1,7):
+            ventana = opciones[numero_elegido-1]
+            break
+        else:
+            print("Elección fuera de rango, intente de nuevo")
+
+    if ventana == "Sin ventana":
+        return M, 1, ventana
+    elif ventana == "Gauss":
+        return round((M-1)/2), gaussian(M, std=M/6), ventana
+    elif ventana == "Triangulo":
+        return round((M-1)/2), np.bartlett(M), ventana
+    elif ventana == "Hanning":
+        return round((M-1)/2), np.hanning(M), ventana
+    elif ventana == "Hamming":
+        return round((M-1)/2), np.hamming(M), ventana
+    elif ventana == "Blackman":
+        return round((M-1)/3), np.blackman(M), ventana
