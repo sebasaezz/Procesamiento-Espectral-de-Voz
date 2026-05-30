@@ -1,24 +1,4 @@
-from audio_io import load_audio, elegir_parametros
-from dft import dividir_en_bloques, aplicar_ventana, calcular_dft
-from plots import plot_espectrograma, plot_audio_y_reconstruccion
-from reconstruccion import ola, reconstruir_audio
+import app
 
-u_s, x, file_path, A_max, nombre_audio =  load_audio()
-
-
-M, hop, expresion_ventana, ventana = elegir_parametros()
-
-bloques = dividir_en_bloques(x, M, hop)
-
-bloques_ventana = aplicar_ventana(bloques, expresion_ventana)
-X = calcular_dft(bloques_ventana)
-
-plot_espectrograma(X, M, hop, u_s)
-
-x_ola = ola(X, M, hop)
-
-reconstruir_audio(x_ola, u_s, M, ventana, nombre_audio, A_max)
-
-plot_audio_y_reconstruccion(audio=x, reconstruccion=x_ola, u_s=u_s)
-
-input("Presione enter para terminar")
+if __name__ == "__main__":
+    app.fujo_consola()
