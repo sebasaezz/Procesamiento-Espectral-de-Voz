@@ -1,13 +1,9 @@
 import numpy as np
-from scipy.io import wavfile
-import os
 
 def ola(X, M, hop, C = 1):
     
     if X is None:
         return None
-
-    X = np.real(X)
 
     bloques_reconstruidos = np.fft.ifft(X, axis = 1) # Cálculo de inversa
     bloques_reconstruidos = np.real(bloques_reconstruidos) # Quitar ruido de fase

@@ -1,5 +1,4 @@
 import numpy as np
-from audio_io import escojer_ventana
 
 def dividir_en_bloques(x, M, hop):
     if len(x) < M:
