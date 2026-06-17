@@ -92,7 +92,7 @@ def elegir_parametros():
 def escojer_ventana(M):
     ventana = ""
 
-    opciones = ["Sin ventana", "Gauss", "Triangulo", "Hanning", "Hamming", "Blackman"]
+    opciones = ["Sin ventana", "Gauss (reconstruccion sin COLA)", "Triangulo", "Hanning", "Hamming", "Blackman"]
     print("\n\n\n\n\n\n")
     print("Escoja una ventana a usar:")
     for i, opcion in enumerate(opciones):
@@ -116,7 +116,7 @@ def escojer_ventana(M):
 
     if ventana == "Sin ventana":
         return M, 1, ventana
-    elif ventana == "Gauss":
+    elif ventana == "Gauss (reconstruccion sin COLA)":
         return round((M-1)/2), gaussian(M, std=M/6), ventana
     elif ventana == "Triangulo":
         return round((M-1)/2), np.bartlett(M), ventana
@@ -127,7 +127,7 @@ def escojer_ventana(M):
     elif ventana == "Blackman":
         return round((M-1)/3), np.blackman(M), ventana
     
-def reconstruir_audio(x, u_s, M, nombre_ventana, nombre_audio, A_max):
+def reconstruir_audio(x, u_s, M, nombre_ventana, nombre_audio, nombre_efecto, A_max):
 
     #Desnormalizar la amplitud
     x = x*A_max
@@ -135,7 +135,7 @@ def reconstruir_audio(x, u_s, M, nombre_ventana, nombre_audio, A_max):
     if x is None:
         print("no se pudo reconstruir el audio")
         return None
-    nombre_archivo = nombre_audio + "_" + nombre_ventana + "_" + str(M)
+    nombre_archivo = nombre_audio + "_" + nombre_ventana + "_" + nombre_efecto + "_" + str(M)
 
     carpeta_salida = "reconstrucciones"
 

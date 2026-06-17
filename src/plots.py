@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def plot_espectrograma(X, M, hop, u_s):
+def plot_espectrograma(X, M, hop, u_s, titulo):
     S = np.abs(X)
     k_n = M//2
     S = S[:, : k_n+1]
@@ -22,15 +22,25 @@ def plot_espectrograma(X, M, hop, u_s):
     plt.ylabel("Frecuencia [Hz]")
     plt.yscale("symlog", linthresh=100)
     plt.colorbar(img, label="Magnitud relativa [dB]")
+    plt.title(titulo)
     plt.show(block=False)
 
-def plot_audio_y_reconstruccion(audio, reconstruccion, u_s):
+def plot_audio_y_reconstruccion(audio, reconstruccion, u_s, t_inicio=0, t_final=None):
     L = min(len(audio), len(reconstruccion))
 
-    audio_plot = audio[:L]
-    reconstruccion_plot = reconstruccion[:L]
+    if t_final is None:
+        t_final = L / u_s
 
-    t = np.arange(L) / u_s
+    i_inicio = int(t_inicio * u_s)
+    i_final = int(t_final * u_s)
+
+    i_inicio = max(0, i_inicio)
+    i_final = min(L, i_final)
+
+    audio_plot = audio[i_inicio:i_final]
+    reconstruccion_plot = reconstruccion[i_inicio:i_final]
+
+    t = np.arange(i_inicio, i_final) / u_s
 
     plt.figure(figsize=(12, 6))
 
@@ -48,18 +58,19 @@ def plot_audio_y_reconstruccion(audio, reconstruccion, u_s):
     plt.ylabel("Amplitud")
     plt.grid(True)
 
-    diferencia =reconstruccion_plot-audio_plot
+    diferencia = reconstruccion_plot - audio_plot
 
-    rmse_relativo = np.sqrt(np.mean(diferencia**2))/np.sqrt(np.mean(audio**2))
+    rmse_relativo = (
+        np.sqrt(np.mean(diferencia**2)) /
+        np.sqrt(np.mean(audio_plot**2))
+    )
 
     plt.subplot(3, 1, 3)
     plt.plot(t, diferencia)
-    plt.title(f"Diferencia Audio - Reconstrucción\nRMSE relativo = {rmse_relativo}")
+    plt.title(f"Diferencia Audio - Reconstrucción\nRMSE relativo = {rmse_relativo:.6f}")
     plt.xlabel("Tiempo [s]")
     plt.ylabel("Amplitud")
     plt.grid(True)
-
-
 
     plt.tight_layout()
     plt.show(block=False)
